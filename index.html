@@ -1,0 +1,218 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Что выбрать: iPhone или Android?</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            max-width: 600px;
+            margin: 0 auto;
+            padding: 20px;
+            line-height: 1.6;
+            position: relative;
+            padding-bottom: 60px;
+        }
+        .question {
+            margin-bottom: 20px;
+            padding: 15px;
+            background-color: #f5f5f5;
+            border-radius: 8px;
+            display: none;
+        }
+        .active {
+            display: block;
+        }
+        button {
+            padding: 10px 15px;
+            margin: 5px;
+            cursor: pointer;
+            background-color: #4CAF50;
+            color: white;
+            border: none;
+            border-radius: 4px;
+        }
+        button:hover {
+            background-color: #45a049;
+        }
+        #result {
+            display: none;
+            margin-top: 20px;
+            padding: 15px;
+            background-color: #e9f7ef;
+            border-radius: 8px;
+            font-weight: bold;
+        }
+        #progress {
+            margin-bottom: 10px;
+        }
+        .stats {
+            position: fixed;
+            bottom: 10px;
+            right: 10px;
+            background: rgba(0,0,0,0.7);
+            color: white;
+            padding: 10px;
+            border-radius: 5px;
+            font-size: 14px;
+        }
+        .stats div {
+            margin: 5px 0;
+        }
+    </style>
+</head>
+<body>
+    <h1>Что выбрать: iPhone или Android?</h1>
+    <p>Ответьте на 10 вопросов, и мы поможем вам определиться!</p>
+
+    <div id="progress">Вопрос 1 из 10</div>
+
+    <div id="question1" class="question active">
+        <p>1. Готовы ли вы потратить на смартфон более 40 тысяч рублей?</p>
+        <button onclick="answer(true, 'iphone')">Да</button>
+        <button onclick="answer(false, 'android')">Нет</button>
+    </div>
+
+    <div id="question2" class="question">
+        <p>2. Готовы ли вы покупать приложения в соответствующем онлайн-магазине?</p>
+        <button onclick="answer(true, 'iphone')">Да</button>
+        <button onclick="answer(false, 'android')">Нет</button>
+    </div>
+
+    <div id="question3" class="question">
+        <p>3. Часто ли вы персонализируете своё устройство?</p>
+        <button onclick="answer(true, 'android')">Да</button>
+        <button onclick="answer(false, 'iphone')">Нет</button>
+    </div>
+
+    <div id="question4" class="question">
+        <p>4. Хотите ли вы использовать SD-карту для расширения памяти смартфона?</p>
+        <button onclick="answer(true, 'android')">Да</button>
+        <button onclick="answer(false, 'iphone')">Нет</button>
+    </div>
+
+    <div id="question5" class="question">
+        <p>5. Планируете ли вы пользоваться одним смартфоном более 5 лет?</p>
+        <button onclick="answer(true, 'iphone')">Да</button>
+        <button onclick="answer(false, 'android')">Нет</button>
+    </div>
+
+    <div id="question6" class="question">
+        <p>6. Разбираетесь ли вы в смартфонах?</p>
+        <button onclick="answer(true, 'android')">Да</button>
+        <button onclick="answer(false, 'iphone')">Нет</button>
+    </div>
+
+    <div id="question7" class="question">
+        <p>7. Какой операционной системой вы пользовались ранее: Android или iOS?</p>
+        <button onclick="answer(true, 'iphone')">iPhone</button>
+        <button onclick="answer(true, 'android')">Android</button>
+    </div>
+
+    <div id="question8" class="question">
+        <p>8. Нужна ли вам полная комплектация при покупке смартфона (Зарядка, провод для зарядки, скрепка для СИМ-карт, чехол, защитное стекло)?</p>
+        <button onclick="answer(true, 'android')">Да</button>
+        <button onclick="answer(false, 'iphone')">Нет</button>
+    </div>
+
+    <div id="question9" class="question">
+        <p>9. Планируете ли вы использовать NFC на смартфоне (бесконтактная оплата телефоном)?</p>
+        <button onclick="answer(true, 'android')">Да</button>
+        <button onclick="answer(false, 'iphone')">Нет</button>
+    </div>
+
+    <div id="question10" class="question">
+        <p>10. Хотите ли вы, чтобы смартфон работал стабильно и без сбоев?</p>
+        <button onclick="answer(true, 'iphone')">Да</button>
+        <button onclick="answer(false, 'android')">Нет</button>
+    </div>
+
+    <div id="result"></div>
+
+    <div class="stats" id="stats">
+        <div>Всего прошло: <span id="total">0</span></div>
+        <div>Выбрали iPhone: <span id="iphoneTotal">0</span></div>
+        <div>Выбрали Android: <span id="androidTotal">0</span></div>
+    </div>
+
+    <script>
+        let currentQuestion = 1;
+        const totalQuestions = 10;
+        let iphoneScore = 0;
+        let androidScore = 0;
+
+        // Загружаем статистику при загрузке страницы
+        document.addEventListener('DOMContentLoaded', function() {
+            loadStats();
+        });
+
+        function answer(isYes, device) {
+            if (device === 'iphone') {
+                iphoneScore += isYes ? 1 : 0;
+            } else {
+                androidScore += isYes ? 0 : 1;
+            }
+
+            document.getElementById(`question${currentQuestion}`).classList.remove('active');
+            currentQuestion++;
+
+            if (currentQuestion <= totalQuestions) {
+                document.getElementById(`question${currentQuestion}`).classList.add('active');
+                document.getElementById('progress').textContent = `Вопрос ${currentQuestion} из ${totalQuestions}`;
+            } else {
+                showResult();
+                updateStats(iphoneScore > androidScore ? 'iphone' : 'android');
+            }
+        }
+
+        function showResult() {
+            const resultDiv = document.getElementById('result');
+            resultDiv.style.display = 'block';
+            document.getElementById('progress').style.display = 'none';
+
+            if (iphoneScore > androidScore) {
+                resultDiv.innerHTML = `<p>Вам больше подходит iPhone!</p>`;
+                resultDiv.style.backgroundColor = '#f0f0f0';
+            } else if (androidScore > iphoneScore) {
+                resultDiv.innerHTML = `<p>Вам больше подходит Android!</p>`;
+                resultDiv.style.backgroundColor = '#e9f7ef';
+            } else {
+                resultDiv.innerHTML = `<p>Вы можете выбрать любой смартфон, оба варианта вам подходят.</p>`;
+                resultDiv.style.backgroundColor = '#e9e9f7';
+            }
+        }
+
+        // Функции для работы со статистикой
+        function loadStats() {
+            const stats = JSON.parse(localStorage.getItem('phoneStats')) || {
+                total: 0,
+                iphone: 0,
+                android: 0
+            };
+
+            document.getElementById('total').textContent = stats.total;
+            document.getElementById('iphoneTotal').textContent = stats.iphone;
+            document.getElementById('androidTotal').textContent = stats.android;
+        }
+
+        function updateStats(winner) {
+            const stats = JSON.parse(localStorage.getItem('phoneStats')) || {
+                total: 0,
+                iphone: 0,
+                android: 0
+            };
+
+            stats.total += 1;
+            if (winner === 'iphone') {
+                stats.iphone += 1;
+            } else {
+                stats.android += 1;
+            }
+
+            localStorage.setItem('phoneStats', JSON.stringify(stats));
+            loadStats();
+        }
+    </script>
+</body>
+</html>
